@@ -18,7 +18,7 @@ public interface HttpErrorResponseHandler {
      * @param respCode
      * @return 
      */
-    public HttpResponseHandlePlan handleHttpErrorResponse(HttpRequest req,int respCode);
+    public HttpResponseHandlePlan handleHttpErrorResponse(HttpRequest req,ErrCode respCode);
     
     /**
      * 
@@ -26,7 +26,7 @@ public interface HttpErrorResponseHandler {
      * @param errorCode
      * @return 
      */
-    public HttpResponseHandlePlan handleIOExceptionBeforeResponse(HttpRequest req,int errorCode);
+    public HttpResponseHandlePlan handleIOExceptionBeforeResponse(HttpRequest req,ErrCode errorCode);
     
     /**
      * 
@@ -34,6 +34,9 @@ public interface HttpErrorResponseHandler {
      * @param errorCode
      * @return 
      */
-    public HttpResponseHandlePlan handleIOExceptionInResponseProcess(HttpRequest req,int errorCode);
+    public HttpResponseHandlePlan handleIOExceptionInResponseProcess(HttpRequest req,ErrCode errorCode);
+    
+    
+    
     
 }
