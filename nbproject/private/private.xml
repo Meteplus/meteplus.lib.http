@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/D:/Projects/meteplus.lib.common/src/com/meteplus/threads/ThreadPool.java</file>
+            <file>file:/D:/Projects/meteplus.lib.common/src/com/meteplus/http/MPHttpClient.java</file>
+            <file>file:/D:/Projects/meteplus.lib.common/src/com/meteplus/utils/QuickSort.java</file>
+            <file>file:/D:/Projects/meteplus.lib.common/src/com/meteplus/http/interfaces/HttpProgressListener.java</file>
+            <file>file:/D:/Projects/meteplus.lib.common/src/com/meteplus/utils/Util.java</file>
+            <file>file:/D:/Projects/meteplus.lib.common/src/com/meteplus/http/wraper/HttpResponseHandlePlan.java</file>
+            <file>file:/D:/Projects/meteplus.lib.common/src/com/meteplus/http/wraper/HttpErrorResponseHandler.java</file>
+            <file>file:/D:/Projects/meteplus.lib.common/src/com/meteplus/http/HttpRequest.java</file>
+            <file>file:/D:/Projects/meteplus.lib.common/src/com/meteplus/http/HttpMethod.java</file>
+            <file>file:/D:/Projects/meteplus.lib.common/src/com/meteplus/http/wraper/MPHttpClientCaller.java</file>
+            <file>file:/D:/Projects/meteplus.lib.common/src/biz/zhibei/ui/utils/UIUtils.java</file>
+            <file>file:/D:/Projects/meteplus.lib.common/src/com/meteplus/http/utils/NetworkUtil.java</file>
+            <file>file:/D:/Projects/meteplus.lib.common/src/com/meteplus/http/utils/Proxy.java</file>
+        </group>
+    </open-files>
+</project-private>
