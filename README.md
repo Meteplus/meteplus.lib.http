@@ -1,6 +1,8 @@
 # meteplus.lib.http
-    一个基于HttpURLConnection实现的简单好用的http包
-    只要一行代码就可以完成所有http请求，通过传递handler，来响应各种异常。
+    An efficient http library based on HttpURLConnection.
+    it's very easy to use,and you can give a plan or error processing policy to your http request.
+    this library is used in my many java spiders projects and runs well.
+    
     
     public String searchcdr(String taskid){
 
@@ -31,3 +33,4 @@
         String postUrl=TeambtionServiceUrls.TB_Agent_Server+TeambtionServiceUrls.TB_WLSheji_GET_TASK;
         return Task.createInstanceByJson(MPHttpClientCaller.doReusableHttpPostForJsonObject(postUrl,"taskid", taskid,this));
     }
+  
