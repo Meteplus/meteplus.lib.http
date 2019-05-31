@@ -1,33 +1,36 @@
 # meteplus.lib.http
-    一个基于HttpURLConnection实现的简单好用的http包
-    只要一行代码就可以完成所有http请求，通过传递handler，来响应各种异常。
+    An efficient and easy-to-use http client library based on HttpURLConnection.
+    it's really very easy to use,and you can give a special error processing policy or plan to your every http request.
+    this library has been used in my many java spiders projects, it runs well
+    
+    the following are some use cases:
     
     public String searchcdr(String taskid){
 
-        String postUrl=TeambtionServiceUrls.TB_Agent_Server_PINBAN+TeambtionServiceUrls.TB_PINBAN_SEARCH_TASK_BY_ID;
-        return MPHttpClientCaller.doReusableHttpPost(postUrl,"taskid", taskid,this);
+        String url="http://xxx...";
+        return MPHttpClientCaller.doReusableHttpPost(url,"taskid", taskid,this);
        
     }      
     
     public String search(String word,int index){
 
-        String postUrl=TeambtionServiceUrls.TB_Agent_Server_PINBAN+TeambtionServiceUrls.TB_PINBAN_SEARCH_TASKS;
+        String url="http://xxx...";
         HashMap<String,Object> paras=new HashMap<>();
         paras.put("word", word);
         paras.put("index", 0);
-        return MPHttpClientCaller.doReusableHttpPost(postUrl, paras,this);
+        return MPHttpClientCaller.doReusableHttpPost(url, paras,this);
      
     }     
 
-    public JSONObject checkTaskDinggaoSrcs(String wlshejiid){
-            //TB_WLSheji_CHECK_TASK_DINGGAO_SRC    
-        String postUrl=TeambtionServiceUrls.TB_Agent_Server+TeambtionServiceUrls.TB_WLSheji_CHECK_TASK_DINGGAO_SRC;
-        return MPHttpClientCaller.doReusableHttpPostForJsonObject(postUrl,"shejiid", wlshejiid,this);
+    public JSONObject checkTaskDinggaoSrcs(String wlshejiid){   
+        String url="http://xxx...";
+        return MPHttpClientCaller.doReusableHttpPostForJsonObject(url,"shejiid", wlshejiid,this);
        
     }
     
     
     public Task getTaskInfo(String taskid){
-        String postUrl=TeambtionServiceUrls.TB_Agent_Server+TeambtionServiceUrls.TB_WLSheji_GET_TASK;
-        return Task.createInstanceByJson(MPHttpClientCaller.doReusableHttpPostForJsonObject(postUrl,"taskid", taskid,this));
+        String url="http://xxx...";
+        return Task.createInstanceByJson(MPHttpClientCaller.doReusableHttpPostForJsonObject(url,"taskid", taskid,this));
     }
+  
