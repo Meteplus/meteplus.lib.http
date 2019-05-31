@@ -3,6 +3,7 @@
     it's very easy to use,and you can give a plan or error processing policy to your http request.
     this library has been used in my many java spiders projects, it runs well
     
+    the following are some use cases:
     
     public String searchcdr(String taskid){
 
