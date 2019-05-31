@@ -1,7 +1,7 @@
 # meteplus.lib.http
     An efficient http library based on HttpURLConnection.
     it's very easy to use,and you can give a plan or error processing policy to your http request.
-    this library is used in my many java spiders projects and runs well.
+    this library has been used in my many java spiders projects, it runs well
     
     
     public String searchcdr(String taskid){
