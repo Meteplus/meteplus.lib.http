@@ -1,5 +1,5 @@
 # meteplus.lib.http
-    An efficient http library based on HttpURLConnection.
+    An efficient http client library based on HttpURLConnection.
     it's very easy to use,and you can give a plan or error processing policy to your http request.
     this library has been used in my many java spiders projects, it runs well
     
