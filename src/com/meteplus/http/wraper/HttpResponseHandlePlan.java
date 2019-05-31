@@ -44,6 +44,14 @@ public class HttpResponseHandlePlan {
         return this.newReq;
     }
     
+    public void setTryAgain(boolean b){
+        this.tryAgain=b;
+    }
+    
+    public void setNewRequest(HttpRequest newReq){
+        this.newReq=newReq;
+    }
+    
     public void setConnectTime(int timeout){
         this.connectTimemout=timeout;
     }

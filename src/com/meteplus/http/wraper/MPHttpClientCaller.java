@@ -78,17 +78,17 @@ public class MPHttpClientCaller {
             //网络是正常的，那么只要处理http非200-209返回值的情况
             if(mpHttpClient.isIoSuccess()){
 
-                plan=handler.handleHttpErrorResponse(req,new ErrCode(mpHttpClient.getResponseStatus(),mpHttpClient.getResponseMessage())); 
+                plan=handler.handleHttpErrorResponse(req,mpHttpClient.getHttpRespCode()); 
 
             }else {//网络不正常，则有两种可能，一种发送请求前出现异常。一种是读取返回数据时出了异常
 
-                if(mpHttpClient.getResponseStatus()>0){//读取返回数据时出了异常
+                if(mpHttpClient.getHttpRespCode().code>0){//读取返回数据时出了异常
 
-                    plan=handler.handleIOExceptionInResponseProcess(req,new ErrCode(mpHttpClient.getIoStatus(),mpHttpClient.getIoExceptionMsg())); 
+                    plan=handler.handleIOExceptionInResponseProcess(req,mpHttpClient.getIoRespCode()); 
 
                 }else{//发送请求前出现异常
 
-                    plan=handler.handleIOExceptionBeforeResponse(req,new ErrCode(mpHttpClient.getIoStatus(),mpHttpClient.getIoExceptionMsg())); 
+                    plan=handler.handleIOExceptionBeforeResponse(req,mpHttpClient.getIoRespCode()); 
 
                 }
 
@@ -186,17 +186,17 @@ public class MPHttpClientCaller {
             //网络是正常的，那么只要处理http非200-209返回值的情况
             if(mpHttpClient.isIoSuccess()){
 
-                plan=handler.handleHttpErrorResponse(req,new ErrCode(mpHttpClient.getResponseStatus(),mpHttpClient.getResponseMessage())); 
+                plan=handler.handleHttpErrorResponse(req,mpHttpClient.getHttpRespCode()); 
 
             }else {//网络不正常，则有两种可能，一种发送请求前出现异常。一种是读取返回数据时出了异常
 
-                if(mpHttpClient.getResponseStatus()>0){//读取返回数据时出了异常
+                if(mpHttpClient.getHttpRespCode().code>0){//读取返回数据时出了异常
 
-                    plan=handler.handleIOExceptionInResponseProcess(req,new ErrCode(mpHttpClient.getIoStatus(),mpHttpClient.getIoExceptionMsg())); 
+                    plan=handler.handleIOExceptionInResponseProcess(req,mpHttpClient.getIoRespCode()); 
 
                 }else{//发送请求前出现异常
 
-                    plan=handler.handleIOExceptionBeforeResponse(req,new ErrCode(mpHttpClient.getIoStatus(),mpHttpClient.getIoExceptionMsg())); 
+                    plan=handler.handleIOExceptionBeforeResponse(req,mpHttpClient.getIoRespCode()); 
 
                 }
 
@@ -304,17 +304,17 @@ public class MPHttpClientCaller {
             //网络是正常的，那么只要处理http非200-209返回值的情况
             if(mpHttpClient.isIoSuccess()){
 
-                plan=handler.handleHttpErrorResponse(req,new ErrCode(mpHttpClient.getResponseStatus(),mpHttpClient.getResponseMessage())); 
+                plan=handler.handleHttpErrorResponse(req,mpHttpClient.getHttpRespCode()); 
 
             }else {//网络不正常，则有两种可能，一种发送请求前出现异常。一种是读取返回数据时出了异常
 
-                if(mpHttpClient.getResponseStatus()>0){//读取返回数据时出了异常
+                if(mpHttpClient.getHttpRespCode().code>0){//读取返回数据时出了异常
 
-                    plan=handler.handleIOExceptionInResponseProcess(req,new ErrCode(mpHttpClient.getIoStatus(),mpHttpClient.getIoExceptionMsg())); 
+                    plan=handler.handleIOExceptionInResponseProcess(req,mpHttpClient.getIoRespCode()); 
 
                 }else{//发送请求前出现异常
 
-                    plan=handler.handleIOExceptionBeforeResponse(req,new ErrCode(mpHttpClient.getIoStatus(),mpHttpClient.getIoExceptionMsg())); 
+                    plan=handler.handleIOExceptionBeforeResponse(req,mpHttpClient.getIoRespCode()); 
 
                 }
 

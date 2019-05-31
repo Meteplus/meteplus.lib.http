@@ -9,13 +9,16 @@ package com.meteplus.http.wraper;
  *
  * @author HuangMing
  */
-public class ErrCode {
+public class ResponseCode {
     public int code;
-    public String errMsg;
+    public String msg;
     
-    public ErrCode(int code,String errMsg){
+    public ResponseCode(){}       
+    
+    public ResponseCode(int code,String msg){
         this.code=code;
-        this.errMsg=errMsg;
+        this.msg=msg;
     }
+   
     
 }

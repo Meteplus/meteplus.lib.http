@@ -23,6 +23,7 @@ import javax.net.ssl.X509TrustManager;
 import com.meteplus.http.utils.NetworkUtil;
 import com.meteplus.http.utils.Proxy;
 import com.meteplus.http.interfaces.HttpProgressListener;
+import com.meteplus.http.wraper.ResponseCode;
 import com.meteplus.utils.Utils;
 
 /**
@@ -33,8 +34,9 @@ public class MPHttpClient {
     
     public static final int DEFAULT_TIMEOUT=5*60*1000;
     
-    private int iostatu;
-    private String ioExceptionMsg;
+//    private int iostatu;
+//    private String ioExceptionMsg;
+    private ResponseCode ioRespCode=new ResponseCode();
     private int connectTimeout=DEFAULT_TIMEOUT;
     private int readTimeout=DEFAULT_TIMEOUT;
     
@@ -61,8 +63,9 @@ public class MPHttpClient {
     
     private HashMap<String,String> respHeaders; 
     private StringBuilder respBody=null;
-    private int respCode;
-    private String respMsg;    
+    private ResponseCode httpRespCode=new ResponseCode();
+//    private int respCode;
+//    private String respMsg;    
 
     private Proxy proxy=null;
     private HttpRequest currentReq;
@@ -77,10 +80,10 @@ public class MPHttpClient {
     //public static boolean istoomanyrequest=false;    
     
     public void resetAllStatus(){
-        iostatu=0;
-        ioExceptionMsg=null;
-        respCode=0;
-        respMsg=null;
+        ioRespCode.code=0;
+        ioRespCode.msg=null;
+        httpRespCode.code=0;
+        httpRespCode.msg=null;
     }
     
     /**
@@ -91,7 +94,7 @@ public class MPHttpClient {
      * @return 
      */
     public boolean isIoSuccess(){
-        return NETWORK_OK==iostatu;
+        return NETWORK_OK==ioRespCode.code;
     }
     
     
@@ -105,25 +108,18 @@ public class MPHttpClient {
      * @return 
      */
     public boolean isHttpSuccess(){
-        return (respCode>=200&&respCode<300)&&(NETWORK_OK==iostatu);
+        return (httpRespCode.code>=200&&httpRespCode.code<300)&&(NETWORK_OK==ioRespCode.code);
     }
     
-    public int getIoStatus(){
-        return this.iostatu;
+    public ResponseCode getIoRespCode(){
+        return ioRespCode;
     }    
     
-    public String getIoExceptionMsg(){
-        return ioExceptionMsg;
+    public ResponseCode getHttpRespCode(){
+        return httpRespCode;
     }
     
-    public int getResponseStatus(){
-        return respCode;
-    }
-    
-    public String getResponseMessage(){
-        return respMsg;
-    } 
-    
+
     public String getResponseBody(){
         if(respBody==null){
             return null;
@@ -179,7 +175,7 @@ public class MPHttpClient {
     
     public String getRedirectUrl(){
         String location=null;
-        if(getResponseStatus()>=300&&getResponseStatus()<400){
+        if(httpRespCode.code>=300&&httpRespCode.code<400){
             location=respHeaders.get(RES_HEADER_NAME_LOCATION);
             System.out.println("location="+location);
         }
@@ -317,14 +313,14 @@ public class MPHttpClient {
             
             
             //process response iostatu and response message
-            respCode=conn.getResponseCode();
-            respMsg=conn.getResponseMessage();
+            httpRespCode.code=conn.getResponseCode();
+            httpRespCode.msg=conn.getResponseMessage();
             
             //process response headers
             processRespHeaders(conn,currentReq);
             
             //process response body
-            if(respCode>=200&&respCode<300){
+            if(httpRespCode.code>=200&&httpRespCode.code<300){
                 //----------操作inputstream时可能抛出网络异常---------
                 respBody=new StringBuilder();
                 in=processRespBody(conn,respBody);
@@ -344,17 +340,16 @@ public class MPHttpClient {
             }
 
             //iostatu of this call function
-            iostatu=NETWORK_OK;
-            
-
+            ioRespCode.code=NETWORK_OK;
+            ioRespCode.msg="OK";
 
         }catch (IOException ie) {
-            iostatu=NETWORK_IO_EXCEPTION;
-            ioExceptionMsg=ie.getMessage();
+            ioRespCode.code=NETWORK_IO_EXCEPTION;
+            ioRespCode.msg=ie.getMessage();
             ie.printStackTrace();
         }catch(Exception e){
-            iostatu=NETWORK_UNCAUGHT_EXCEPTION;
-            ioExceptionMsg=e.getMessage();
+            ioRespCode.code=NETWORK_UNCAUGHT_EXCEPTION;
+            ioRespCode.msg=e.getMessage();
             e.printStackTrace();
         }finally{
             
@@ -424,8 +419,8 @@ public class MPHttpClient {
             
             
             //process response iostatu and response message
-            respCode=conn.getResponseCode();
-            respMsg=conn.getResponseMessage();
+            httpRespCode.code=conn.getResponseCode();
+            httpRespCode.msg=conn.getResponseMessage();
             
             //process response headers
             processRespHeaders(conn,currentReq);
@@ -516,12 +511,12 @@ public class MPHttpClient {
             //conn.disconnect();
             
         }catch (IOException ie) {
-            iostatu=NETWORK_IO_EXCEPTION;
-            ioExceptionMsg=ie.getMessage();
+            ioRespCode.code=NETWORK_IO_EXCEPTION;
+            ioRespCode.msg=ie.getMessage();
             ie.printStackTrace();
         }catch(Exception e){
-            iostatu=NETWORK_UNCAUGHT_EXCEPTION;
-            ioExceptionMsg=e.getMessage();
+            ioRespCode.code=NETWORK_UNCAUGHT_EXCEPTION;
+            ioRespCode.msg=e.getMessage();
             e.printStackTrace();
         }finally{
             try{
