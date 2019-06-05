@@ -33,6 +33,7 @@ public class HttpRequest {
     public static final String REQ_HEADER_NAME_REFERER="Referer";
     public static final String REQ_HEADER_NAME_COOKIE="Cookie";
     public static final String REQ_HEADER_NAME_CONTENT_DISPOSITION="Content-Disposition";
+    public static final String REQ_HEADER_NAME_AUTHORIZATION="Authorization";
         
     //------------------------------------------------------------------------------------
     public static final String ACCEPT_DEFAULT_VALUE="application/json, text/javascript, text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
