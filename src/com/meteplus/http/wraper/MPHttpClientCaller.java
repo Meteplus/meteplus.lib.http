@@ -49,6 +49,13 @@ public class MPHttpClientCaller {
 
     }       
         
+    public static String doDisposableHttpPost(String url,JSONArray jsonArr){
+        
+       return new MPHttpClient().newCall(new HttpRequest().url(url).post().addJsonArray(jsonArr).build()).getResponseBody();
+
+    }        
+    
+    
     public static String doDisposableHttpPost(String url,HashMap<String,Object> paras){
         
         HttpRequest req=new HttpRequest().url(url).post();
@@ -81,6 +88,15 @@ public class MPHttpClientCaller {
         return JSONObject.parseArray(doDisposableHttpPost(url,jsonObj));
     } 
     
+    public static JSONObject doDisposableHttpPostForJsonObject(String url,JSONArray jsonArr){
+        return JSONObject.parseObject(doDisposableHttpPost(url,jsonArr));
+    }      
+    
+    public static JSONArray doDisposableHttpPostForJsonArray(String url,JSONArray jsonArr){
+        return JSONObject.parseArray(doDisposableHttpPost(url,jsonArr));
+    }     
+    
+    
     public static JSONObject doDisposableHttpPostForJsonObject(String url,HashMap<String,Object> paras){
         return JSONObject.parseObject(doDisposableHttpPost(url,paras));
     }      
@@ -106,7 +122,11 @@ public class MPHttpClientCaller {
     
     public static String doDisposableHttpPut(String url,JSONObject jsonObj){
        return new MPHttpClient().newCall(new HttpRequest().url(url).put().addJsonObj(jsonObj).build()).getResponseBody();
-    }        
+    }  
+    
+    public static String doDisposableHttpPut(String url,JSONArray jsonArr){
+       return new MPHttpClient().newCall(new HttpRequest().url(url).put().addJsonArray(jsonArr).build()).getResponseBody();
+    }      
         
     public static String doDisposableHttpPut(String url,String key,Object value){
         HashMap<String,Object> paras=new HashMap<>();
@@ -129,6 +149,14 @@ public class MPHttpClientCaller {
     public static JSONArray doDisposableHttpPutForJsonArray(String url,JSONObject jsonObj){
         return JSONObject.parseArray(doDisposableHttpPut(url,jsonObj));
     } 
+    
+    public static JSONObject doDisposableHttpPutForJsonObject(String url,JSONArray jsonArr){
+        return JSONObject.parseObject(doDisposableHttpPut(url,jsonArr));
+    }      
+    
+    public static JSONArray doDisposableHttpPutForJsonArray(String url,JSONArray jsonArr){
+        return JSONObject.parseArray(doDisposableHttpPut(url,jsonArr));
+    }     
     
     public static JSONObject doDisposableHttpPutForJsonObject(String url,HashMap<String,Object> paras){
         return JSONObject.parseObject(doDisposableHttpPut(url,paras));
@@ -468,7 +496,85 @@ public class MPHttpClientCaller {
        
     }         
     
+    public static String doReusableHttpPost(String url,JSONArray jsonArr,HttpErrorResponseHandler handler){
+        
+        if(handler==null) throw new NullPointerException("HttpErrorResponseHandler 不能为空！");
+        
+        MPHttpClient mpHttpClient=new MPHttpClient();
+        HttpRequest req=new HttpRequest().url(url).addJsonArray(jsonArr); 
+        boolean tryAgain=true;
+        
+        while(tryAgain){
+            
+            //复用httpClient对象
+            mpHttpClient.resetAllStatus();            
+            
+            //网络异常，关闭之前，连接、读、写均正常而且返回http状态码200
+            if(mpHttpClient.newCall(req.post().build()).isHttpSuccess()){
+                break;
+            }  
+            
+            HttpResponseHandlePlan plan;
+            //网络是正常的，那么只要处理http非200-209返回值的情况
+            if(mpHttpClient.isIoSuccess()){
 
+                plan=handler.handleHttpErrorResponse(req,mpHttpClient.getHttpRespCode()); 
+
+            }else {//网络不正常，则有两种可能，一种发送请求前出现异常。一种是读取返回数据时出了异常
+
+                if(mpHttpClient.getHttpRespCode().code>0){//读取返回数据时出了异常
+
+                    plan=handler.handleIOExceptionInResponseProcess(req,mpHttpClient.getIoRespCode()); 
+
+                }else{//发送请求前出现异常
+
+                    plan=handler.handleIOExceptionBeforeResponse(req,mpHttpClient.getIoRespCode()); 
+
+                }
+
+            }
+
+            if(plan!=null){
+
+                tryAgain=plan.isTryAgain();
+                if(mpHttpClient.getConnectTimOut()!=plan.getConnectTimeout()){
+                    mpHttpClient.setConnectTimeOut(plan.getConnectTimeout());
+                }
+
+                if(mpHttpClient.getReadTimeOut()!=plan.getReadTimeout()){
+                    mpHttpClient.setReadTimeOut(plan.getReadTimeout());
+                }
+
+
+                if(tryAgain){
+
+                    HttpRequest newReq=plan.getNewRequest();
+                    if(newReq!=null){
+
+                        req=newReq;//用新的请求进行尝试
+
+                    }else{
+                        //do nothing
+                        //继续使用老请求，老设置进行循环尝试
+                        //但是cookies可能部分已经被服务器的返回重置了，请注意这一点！！！
+                    }
+                }else{//tryAgain为false getNewRequest（）的值被忽略。客户端用来跳出请求循环。
+                    //不做任何操作，结束循环
+                }
+
+            }else{
+                    //do nothing
+                    //继续使用老请求，老设置进行循环尝试
+                    //但是cookies可能部分已经被服务器的返回重置了，请注意这一点！！！        
+            }
+
+            
+        }
+  
+        return mpHttpClient.getResponseBody();
+       
+    }         
+    
     
     /**
      * 1、请求网络正常，读写正常，返回200-209.则一次请求成功，返回结果给客户端
@@ -599,6 +705,15 @@ public class MPHttpClientCaller {
         return JSONObject.parseArray(doReusableHttpPost(url,jsonObj,handler));
     } 
     
+    public static JSONObject doReusableHttpPostForJsonObject(String url,JSONArray jsonArr,HttpErrorResponseHandler handler){
+        return JSONObject.parseObject(doReusableHttpPost(url,jsonArr,handler));
+    }      
+    
+    public static JSONArray doReusableHttpPostForJsonArray(String url,JSONArray jsonArr,HttpErrorResponseHandler handler){
+        return JSONObject.parseArray(doReusableHttpPost(url,jsonArr,handler));
+    }     
+    
+    
     public static JSONObject doReusableHttpPostForJsonObject(String url,HashMap<String,Object> paras,HttpErrorResponseHandler handler){
         return JSONObject.parseObject(doReusableHttpPost(url,paras,handler));
     }      
@@ -711,7 +826,85 @@ public class MPHttpClientCaller {
        
     }         
     
+    public static String doReusableHttpPut(String url,JSONArray jsonArr,HttpErrorResponseHandler handler){
+        
+        if(handler==null) throw new NullPointerException("HttpErrorResponseHandler 不能为空！");
+        
+        MPHttpClient mpHttpClient=new MPHttpClient();
+        HttpRequest req=new HttpRequest().url(url).addJsonArray(jsonArr); 
+        boolean tryAgain=true;
+        
+        while(tryAgain){
+            
+            //复用httpClient对象
+            mpHttpClient.resetAllStatus();            
+            
+            //网络异常，关闭之前，连接、读、写均正常而且返回http状态码200
+            if(mpHttpClient.newCall(req.put().build()).isHttpSuccess()){
+                break;
+            }  
+            
+            HttpResponseHandlePlan plan;
+            //网络是正常的，那么只要处理http非200-209返回值的情况
+            if(mpHttpClient.isIoSuccess()){
 
+                plan=handler.handleHttpErrorResponse(req,mpHttpClient.getHttpRespCode()); 
+
+            }else {//网络不正常，则有两种可能，一种发送请求前出现异常。一种是读取返回数据时出了异常
+
+                if(mpHttpClient.getHttpRespCode().code>0){//读取返回数据时出了异常
+
+                    plan=handler.handleIOExceptionInResponseProcess(req,mpHttpClient.getIoRespCode()); 
+
+                }else{//发送请求前出现异常
+
+                    plan=handler.handleIOExceptionBeforeResponse(req,mpHttpClient.getIoRespCode()); 
+
+                }
+
+            }
+
+            if(plan!=null){
+
+                tryAgain=plan.isTryAgain();
+                if(mpHttpClient.getConnectTimOut()!=plan.getConnectTimeout()){
+                    mpHttpClient.setConnectTimeOut(plan.getConnectTimeout());
+                }
+
+                if(mpHttpClient.getReadTimeOut()!=plan.getReadTimeout()){
+                    mpHttpClient.setReadTimeOut(plan.getReadTimeout());
+                }
+
+
+                if(tryAgain){
+
+                    HttpRequest newReq=plan.getNewRequest();
+                    if(newReq!=null){
+
+                        req=newReq;//用新的请求进行尝试
+
+                    }else{
+                        //do nothing
+                        //继续使用老请求，老设置进行循环尝试
+                        //但是cookies可能部分已经被服务器的返回重置了，请注意这一点！！！
+                    }
+                }else{//tryAgain为false getNewRequest（）的值被忽略。客户端用来跳出请求循环。
+                    //不做任何操作，结束循环
+                }
+
+            }else{
+                    //do nothing
+                    //继续使用老请求，老设置进行循环尝试
+                    //但是cookies可能部分已经被服务器的返回重置了，请注意这一点！！！        
+            }
+
+            
+        }
+  
+        return mpHttpClient.getResponseBody();
+       
+    }         
+    
     /**
      * 1、请求网络正常，读写正常，返回200-209.则一次请求成功，返回结果给客户端
      * 2、请求失败（网络或者http返回非200-209状态值）,客户端没有设置异常处理器，
@@ -844,6 +1037,14 @@ public class MPHttpClientCaller {
     public static JSONArray doReusableHttpPutForJsonArray(String url,JSONObject jsonObj,HttpErrorResponseHandler handler){
         return JSONObject.parseArray(doReusableHttpPut(url,jsonObj,handler));
     } 
+    
+    public static JSONObject doReusableHttpPutForJsonObject(String url,JSONArray jsArr,HttpErrorResponseHandler handler){
+        return JSONObject.parseObject(doReusableHttpPut(url,jsArr,handler));
+    }      
+    
+    public static JSONArray doReusableHttpPutForJsonArray(String url,JSONArray jsArr,HttpErrorResponseHandler handler){
+        return JSONObject.parseArray(doReusableHttpPut(url,jsArr,handler));
+    }     
     
     public static JSONObject doReusableHttpPutForJsonObject(String url,HashMap<String,Object> paras,HttpErrorResponseHandler handler){
         return JSONObject.parseObject(doReusableHttpPut(url,paras,handler));

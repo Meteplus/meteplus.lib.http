@@ -268,7 +268,7 @@ public class HttpRequest {
         
         commonReqHeaders.put(REQ_HEADER_NAME_CONTENT_TYPE, CONTENT_TYPE_JSON);
         try{
-            sbBody=new StringBuilder(jsonObj.toString());
+            sbBody=new StringBuilder(jsonObj==null?"":jsonObj.toString());
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -278,7 +278,7 @@ public class HttpRequest {
     public HttpRequest addJsonArray(JSONArray jsonArr){
         commonReqHeaders.put(REQ_HEADER_NAME_CONTENT_TYPE, CONTENT_TYPE_JSON);
         try{
-            sbBody=new StringBuilder(jsonArr.toString());
+            sbBody=new StringBuilder(jsonArr==null?"":jsonArr.toString());
         }catch(Exception e){
             e.printStackTrace();
         }
